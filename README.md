@@ -1,34 +1,28 @@
 # ProjectRTMS
 Finally did it ^___^
 
-//******************************************************************************//
-//	NAME 			: MUHAMMAD AKMAL BIN MOHD ADZUDDIN							                  //
-//	ID	 			: 25350														                                //
-//	PROGRAMME 		: ELECTRICAL AND ELECTRONICS ENGINEERING					            //
-//	COURSE 			: EDB 4123 REAL TIME MICROCONTROLLER SYSTEMS (RTMS)	 		        //
-//	LECTURER 		:	DR PATRICK SEBASTIAN									                        //
-//	BATCH			: JANUARY 2021 												                            //	
-//																				                                      //
-//	PROJECT TITLE : DEFUSE THE BOMB (GAME)										                  //
-//	FUNCTIONS UTILISED : 	1. LCD												                        //	
-//							2. 7 SEGMENT (BLOCK 2 AND 3)						                        //
-// 							3. KEYPAD											                                  //
-//							4. 4 RED LEDs										                                //
-//							5. RGB LEDs											                                //
-//							6. BUZZER											                                  // 
-//							7. ADC6 & ADC7 										                              //
-//							8. TIMER0 TIMER1 TIMER3								                          //
-//							9. RANDOM FUNCTION (SRAND RAND)					                        //
-//																				                                      //
-//																				                                      //
-//	COPYRIGHTS : NONE, FEEL FREE TO USE AND ADJUST 								              //
-//							 DO FOLLOW ME AT GITHUB.COM/MUHMDAKML			 	                    //
-//							 THANK YOU ^___^								   	                            //
-//******************************************************************************//
+NAME 			: MUHAMMAD AKMAL BIN MOHD ADZUDDIN
+ID 			    : 25350
+PROGRAMME 		: EE
+COURSE 		    : EDB 4123 REAL TIME MICROCONTROLLER SYSTEMS JAN 2021
+LECTURER 		: DR PATRICK SEBASTIAN 
+DATE OF PROJECT DEMO : 25TH MARCH 2021
+
+
+FUNCTIONS UTILISED:
+1.	LCD = Show main menu, crosshair and bombs
+2.	7 Segment (Block 2 and 3) = Show bomb countdown timer
+3.	Keypad = User input (1/2/3 for choosing difficulty, 5 to defuse bomb or exit game)
+4.	4 Red LEDs = Blink and speed according to difficulty level 
+5.	RGB LEDs = Shows successful mission
+6.	Buzzer = Sounds when mission is a success or a failure
+7.	ADC6 and ADC7 (Internal and External Variable Resistors) = Control crosshair X-Y movements
+8.	TIMER0 TIMER1 TIMER2 = Control 4 Red LEDs blinking speed
+9.	RANDOM FUNCTION (SRAND / RAND) = Randomize set of bombs used
+
 
 
 GAME FLOW:
-
 •	Show Game Main Menu
 
 •	Players choose which difficulty according to keypad input 1 or 2 or 3
