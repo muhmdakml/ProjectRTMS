@@ -1,28 +1,29 @@
-//*****************************************************************//
-//	NAME 			: MUHAMMAD AKMAL BIN MOHD ADZUDDIN									 //
-//	ID	 			: 25350																							 //
-//	PROGRAMME : ELECTRICAL AND ELECTRONICS ENGINEERING						 //
-//	COURSE 		: EDB 4123 REAL TIME MICROCONTROLLER SYSTEMS (RTMS)	 //
-//	LECTURER 	:	DR PATRICK SEBASTIAN															 //
-//	BATCH			: JANUARY 2021 																			 //	
-//																																 //
-//	PROJECT TITLE : DEFUSE THE BOMB (GAME)												 //
-//	FUNCTIONS UTILISED : 1. LCD																		 //	
-//											 2. 7 SEGMENT (BLOCK 2 AND 3)							 //
-// 											 3. KEYPAD																 //
-//											 4. 4 RED LEDs														 //
-//											 5. RGB LEDs															 //
-//											 6. Buzzer																 // 
-//											 7. ADC6 & ADC7 													 //
-//											 8. TIMER0 TIMER1 TIMER3									 //
-//											 9. RANDOM FUNCTION (SRAND)							   //
-//																																 //
-//																																 //
-//	COPYRIGHTS : NONE, FEEL FREE TO USE AND ADJUST 								 //
-//							 DO FOLLOW ME AT GITHUB.COM/MUHMDAKML			 				 //
-//							 THANK YOU ^___^																	 //
-//*****************************************************************//
+//******************************************************************************//
+//	NAME 			: MUHAMMAD AKMAL BIN MOHD ADZUDDIN							//
+//	ID	 			: 25350														//
+//	PROGRAMME 		: ELECTRICAL AND ELECTRONICS ENGINEERING					//
+//	COURSE 			: EDB 4123 REAL TIME MICROCONTROLLER SYSTEMS (RTMS)	 		//
+//	LECTURER 		:	DR PATRICK SEBASTIAN									//
+//	BATCH			: JANUARY 2021 												//	
+//																				//
+//	PROJECT TITLE : DEFUSE THE BOMB (GAME)										//
+//	FUNCTIONS UTILISED : 	1. LCD												//	
+//							2. 7 SEGMENT (BLOCK 2 AND 3)						//
+// 							3. KEYPAD											//
+//							4. 4 RED LEDs										//
+//							5. RGB LEDs											//
+//							6. BUZZER											// 
+//							7. ADC6 & ADC7 										//
+//							8. TIMER0 TIMER1 TIMER3								//
+//							9. RANDOM FUNCTION (SRAND)							//
+//																				//
+//																				//
+//	COPYRIGHTS : NONE, FEEL FREE TO USE AND ADJUST 								//
+//							 DO FOLLOW ME AT GITHUB.COM/MUHMDAKML			 	//
+//							 THANK YOU ^___^								   	//
+//******************************************************************************//
 
+//DEFINING ALL THE LIBRARIES USED (ONLY NORMAL LIBRARIES)
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -35,14 +36,20 @@
 #include "Scankey.h"
 #include "Seven_Segment.h"
 
+//DEFINING THE TIMER TYPES USED
 #define  ONESHOT  0   // counting and interrupt when reach TCMPR number, then stop
 #define  PERIODIC 1   // counting and interrupt when reach TCMPR number, then counting from 0 again
 #define  TOGGLE   2   // keep counting and interrupt when reach TCMPR number, tout toggled (between 0 and 1)
 #define  CONTINUOUS 3 // keep counting and interrupt when reach TCMPR number
 
+//DEFINING FLAG AND LED STATE FOR ADC AMD TIMES
 volatile uint8_t gu8AdcIntFlag;
 volatile uint32_t ledState = 0;
 
+									//PART 1
+//DEFINE ALL TIMERS AND RELATED ITEMS
+//******************************************************************************//
+// DEFINE TIMER0 IRQ HANDLE
 void TMR0_IRQHandler()
 {
 	
@@ -59,6 +66,7 @@ void TMR0_IRQHandler()
 	TIMER0->TISR.TIF = 1;		// clear Interrupt flag	
 }
 
+// DEFINE TIMER1 IRQ HANDLE
 void TMR1_IRQHandler()
 {
 	ledState = ~ ledState;  // changing ON/OFF state
@@ -73,6 +81,7 @@ void TMR1_IRQHandler()
 	TIMER1->TISR.TIF = 1;		// clear Interrupt flag
 }
 
+// DEFINE TIMER2 IRQ HANDLE
 void TMR2_IRQHandler()
 {
 	ledState = ~ ledState;  // changing ON/OFF state
@@ -86,6 +95,8 @@ void TMR2_IRQHandler()
 	else	DrvGPIO_SetBit(E_GPC,15);
 	TIMER2->TISR.TIF = 1;		// clear Interrupt flag
 }
+
+// INITIALISE TIMER0 (CONTINOUOUS)
 void InitTIMER0(void)
 {   
 	SYSCLK->CLKSEL1.TMR0_S = 0;	//Select 12Mhz for Timer0 clock source 
@@ -101,6 +112,7 @@ void InitTIMER0(void)
 	TIMER0->TCSR.CEN = 1;		//Enable Timer0
 }
 
+// INITIALISE TIMER1 (CONTINOUOUS)
 void InitTIMER1(void)
 {      
 	SYSCLK->CLKSEL1.TMR1_S = 0;	//Select 12Mhz for Timer1 clock source 
@@ -116,6 +128,7 @@ void InitTIMER1(void)
 	TIMER1->TCSR.CEN = 1;		//Enable Timer1
 }
 
+// INITIALISE TIMER2 (CONTINOUOUS)
 void InitTIMER2(void)
 {       
 	SYSCLK->CLKSEL1.TMR2_S = 0;	//Select 12Mhz for Timer0 clock source 
@@ -132,6 +145,8 @@ void InitTIMER2(void)
 	TIMER2->TCSR.CEN = 1;		//Enable Timer2
 
 }
+
+// INITIALISE TO DISABLE TIMER0
 void DisableTIMER0(void)
 {   
 	SYSCLK->CLKSEL1.TMR0_S = 0;	//Select 12Mhz for Timer0 clock source 
@@ -147,6 +162,7 @@ void DisableTIMER0(void)
 	TIMER0->TCSR.CEN = 0;		//Disable Timer0
 }
 
+// INITIALISE TO DISABLE TIMER1
 void DisableTIMER1(void)
 {      
 	SYSCLK->CLKSEL1.TMR1_S = 0;	//Select 12Mhz for Timer1 clock source 
@@ -162,6 +178,7 @@ void DisableTIMER1(void)
 	TIMER1->TCSR.CEN = 0;		//Disable Timer1
 }
 
+// INITIALISE TO DISABLE TIMER2
 void DisableTIMER2(void)
 {       
 	SYSCLK->CLKSEL1.TMR2_S = 0;	//Select 12Mhz for Timer0 clock source 
@@ -178,14 +195,16 @@ void DisableTIMER2(void)
 	TIMER2->TCSR.CEN = 0;		//Disable Timer2
 }
 
+// INITIALISE TO SET ADC FLAG 
 void AdcIntCallback(uint32_t u32UserData)
 {
     gu8AdcIntFlag = 1;	
 }
+//******************************************************************************//
 
-
-
-
+								//PART 2
+// DEFINE GPIO / LED / LCD AND OTHER FUNCTIONS
+//******************************************************************************//
 void seg_display(int16_t value)
 {
   int8_t digit;
@@ -334,7 +353,11 @@ void BombDefused(void)
 		u--;
 	}
 }
+//******************************************************************************//
 
+								//PART 3
+// DEFINE THE BMP IMAGE FILE 
+//******************************************************************************//
 
 unsigned char Crosshair[128] = 
 {
@@ -379,30 +402,40 @@ unsigned char MissionSuccess[1024] =
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x0F,0x3F,0x3F,0x70,0x60,0x60,0x60,0x61,0x63,0x73,0x72,0x70,0x72,0x73,0x71,0x70,0x30,0x70,0x31,0x31,0x33,0x32,0x30,0x31,0x31,0x30,0x30,0x30,0x31,0x39,0x39,0x39,0x38,0x39,0x38,0x38,0x39,0x39,0x39,0x19,0x19,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x1C,0x1C,0x18,0x1C,0x1C,0x1C,0x1C,0x1C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0C,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x0E,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x06,0x07,0x07,0x07,0x07,0x07,0x03,0x03,0x01,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 	0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 };
+//******************************************************************************//
 
 
 
 
+							// START OF MAIN FUNCTION
+
+
+
+
+//******************************************************************************//
 int32_t main (void)
 {
+	// DEFINING ALL IMPORTANT VARIABLES
 	int i,keyin, defuser = 0, PlayerOption = 0, counter = 0, leftrightsidetoside = 36, SetNum;
-	int Bomb1, Bomb2, Bomb3;
-	int Bomb1x, Bomb1y, Bomb2x, Bomb2y, Bomb3x, Bomb3y; 														//Prepare Randomising Bombs
-	int x ,y ;
+	int Bomb1, Bomb2, Bomb3;							// Define bomb state (1 = Armed, 0 = Defused)
+	int Bomb1x, Bomb1y, Bomb2x, Bomb2y, Bomb3x, Bomb3y; // Coordinates for any bomb placements
+	int x ,y ;											// For ADC x-y conversion
 	uint16_t adc_value[8];
 	char TEXT[4][18];
 
-
+	//SELECT EXTERNAL CLOCK AND ENABLE EXTERNAL CLOCK
 	UNLOCKREG();
 	SYSCLK->PWRCON.XTL12M_EN = 1; 		// enable external clock (12MHz)
 	DrvSYS_Delay(5000); 							// waiting for 12MHz crystal stable
 	SYSCLK->CLKSEL0.HCLK_S = 0;	  		// select external clock (12MHz)
 	LOCKREG();
 	
+	//INITIALISE LED (GPIOs) AND LCD
 	init_LED();
 	init_LCD();  
 	clear_LCD();
 	
+	//SLIDING THE MAIN MENU LOGO LEFT AND RIGHT
 	while (leftrightsidetoside < 57)
 	{
 	printS(10,7,"DEFUSE DA BOMB");
@@ -422,17 +455,20 @@ int32_t main (void)
 	clear_LCD();		
 	}
 
+	//SHOWS THE GAME MAIN MENU 
 	printS(10,7,"DEFUSE DA BOMB");
 	draw_Bmp32x32(46,25,FG_COLOR,BG_COLOR,Crosshair);
 	draw_Bmp16x16(56,31,FG_COLOR,BG_COLOR,Bomb);
 	KnightRiderLED();
 	
+	//LARGE WHILE LOOP TO REPLAY GAME
 	while(PlayerOption == 0)
 	{	
 	
-	srand(counter);							//To seed random number for rand() using incremental fixed values //Cannot use srand(time) >.< Sorry sir dunno how to use struct
-	SetNum = rand() %11 + 1;		//Randomise Bomb Sets Between Value 0 until 3
-	switch(SetNum) 							//All x-values are ranging from 10 - 106 and All y-values are rangin from 6 - 36
+	//INITIALISE THE RANDOM SET OF BOMB (CAN BE EDITED)
+	srand(counter);					//To seed random number for rand() using incremental fixed values //Cannot use srand(time) >.< Sorry sir dunno how to use struct
+	SetNum = rand() %11 + 1;		//Randomise Bomb Sets Between Value 0 until 11
+	switch(SetNum) 					//Applicable Range : X-values from 10 - 106 and Y-values from 6 - 36
 	{
 		case 0:
 			{
@@ -520,6 +556,7 @@ int32_t main (void)
 			}
 	}
 	
+	//SHOW OPTION WHICH DIFFICULTY TO CHOOSE FROM
 	keyin = 0;
 	clear_LCD();  
 	printS_5x7(20,8,"Choose Your Level:");
@@ -528,6 +565,8 @@ int32_t main (void)
 	printS_5x7(0,56,"3: Veteran - 3Bombs - 10s");
 	DrvSYS_Delay(300000);
 	
+	//LOOP TO RECEIVE INPUT FROM USER KEYPAD (3 LEVELS), ONCE RECEIVED, SHOW LOADING SCREEN
+	//INSIDE EACH CASE, ARMING THE BOMB (Bomb[i]), SETUP THE COUNTDOWN TIMER(i) AND INITIALISE TIMER[i]
 	while(keyin == 0) 
 	{
     keyin=ScanKey(); 
@@ -540,9 +579,9 @@ int32_t main (void)
 			print_Line(1,"Hold 5 To Defuse");
 			printS_5x7(36,56,"ARMING THE BOMB...");
 			KnightRiderLED();
-			Bomb1 = 1;
-			i = 310;
-			InitTIMER0();                        // Set Timer0 Ticking
+			Bomb1 = 1;							// Arming 1 Bomb only
+			i = 310;							// Countdown timer 30 seconds
+			InitTIMER0();                       // Set Timer0 Ticking
 			break;
 			}	
 			case 2:
@@ -552,10 +591,10 @@ int32_t main (void)
 			print_Line(1,"Hold 5 To Defuse");
 			printS_5x7(36,56,"ARMING THE BOMB...");
 			KnightRiderLED();	
-			Bomb1 = 1;
-			Bomb2 = 1;
-			i = 160;		
-			InitTIMER1();                        // Set Timer1 Ticking
+			Bomb1 = 1;							// Arming 1 Bomb 
+			Bomb2 = 1;							// Arming 2 Bomb 
+			i = 160;							// Countdown timer 15 seconds
+			InitTIMER1();                       // Set Timer1 Ticking
 			break;
 			}	
 			case 3:	
@@ -565,82 +604,83 @@ int32_t main (void)
 			print_Line(1,"Hold 5 To Defuse");
 			printS_5x7(36,56,"ARMING THE BOMB...");
 			KnightRiderLED();	
-			Bomb1 = 1;
-			Bomb2 = 1;
-			Bomb3 = 1;
-			i = 110;
-			InitTIMER2();			     							 // Set Timer2 Ticking
+			Bomb1 = 1;							// Arming 1 Bomb 
+			Bomb2 = 1;							// Arming 2 Bomb 
+			Bomb3 = 1;							// Arming 3 Bomb 
+			i = 110;							// Countdown timer 10 seconds
+			InitTIMER2();			     		// Set Timer2 Ticking
 			break;
 			}
-			default: keyin = 0;
+			default: keyin = 0;					// Repeat loop until get a correct input
 		}	
 	}
 
 	clear_LCD();
 	
-	// START ADC6 AND ADC7 FOR BOMB DEFUSER
+
+// START ADC6 AND ADC7 FOR BOMB DEFUSER
   DrvADC_Open(ADC_SINGLE_END, ADC_CONTINUOUS_OP, 0xFF, INTERNAL_HCLK, 1);
   DrvADC_EnableADCInt(AdcIntCallback, 0);
+	x = 7;   // ADC7 using internal variable resistor for x-axis control              
+	y = 6;   // ADC6 using internal variable resistor for x-axis control 
+	gu8AdcIntFlag = 0;      
+	DrvADC_StartConvert(); 
 
-	x = 7;                 
-	y = 6;    
-	
-	gu8AdcIntFlag =0;      
- 	DrvADC_StartConvert(); 
-		
+	// LEVEL 1 : RECRUIT LOOP	
 	while (keyin==1)
 	{	
 		while(gu8AdcIntFlag==0);
 		gu8AdcIntFlag=0;		     
-		adc_value[x] = DrvADC_GetConversionData(x);   
-		adc_value[y] = DrvADC_GetConversionData(y);   
-		adc_value[x] = adc_value[x] / 43 ;
-		adc_value[y] = adc_value[y] / 135 ;
-		
-		draw_Bmp32x32(adc_value[x],adc_value[y],FG_COLOR,BG_COLOR,Crosshair);
-		draw_Bmp16x16(Bomb1x,Bomb1y,FG_COLOR,BG_COLOR,Bomb);
+		adc_value[x] = DrvADC_GetConversionData(x);   	// Get ADC7 value
+		adc_value[y] = DrvADC_GetConversionData(y);   	// Get ADC6 value
+		adc_value[x] = adc_value[x] / 43 ;				// Convert ADC7 into X-AXIS
+		adc_value[y] = adc_value[y] / 135 ;				// Convert ADC6 into Y-AXIS
+
+		draw_Bmp32x32(adc_value[x],adc_value[y],FG_COLOR,BG_COLOR,Crosshair);	// Draw crosshair
+		draw_Bmp16x16(Bomb1x,Bomb1y,FG_COLOR,BG_COLOR,Bomb);					// Draw bomb 1
 	
-		//DrvSYS_Delay(10000);
-		seg_display(i);		
-		i--;
-		if (i< 0) break;	
-		clear_LCD();
-			 
-		defuser=ScanKey(); 
+		seg_display(i);		// Show countdown timer on 7 segment (2 block)	
+		i--;				// Countdown per second
+		if (i< 0) break;	// Break WHILE Loop if countdown has finished
+		clear_LCD();		
+
+		// Check for keypad input 5, if X-axis and Y-axis within vicinity of bomb AND within margin, defuse the bomb and break loop.	 
+		defuser=ScanKey(); 	
 		if (adc_value[x] + 10 < Bomb1x + 3 && adc_value[x] + 10 > Bomb1x - 3 && adc_value[y] + 6 < Bomb1y + 3 && adc_value[y] + 6 > Bomb1y - 3 && defuser == 5)
 		{	
-			draw_Bmp16x16(Bomb1x - 2, Bomb1y + 2,FG_COLOR,BG_COLOR,Defused);
+			draw_Bmp16x16(Bomb1x - 2, Bomb1y + 2,FG_COLOR,BG_COLOR,Defused); // Show bomb is defused
 			Bomb1 = 0;
-			keyin=0;
+			keyin=0;		// Break loop once all bomb has defused
 		}
 		
 	}
 
-	
+// LEVEL 2 : MAJOR LOOP	
 while (keyin == 2)
 	{	
 		while(gu8AdcIntFlag==0);
 		gu8AdcIntFlag=0;		     
-		adc_value[x] = DrvADC_GetConversionData(x);   
-		adc_value[y] = DrvADC_GetConversionData(y);   
-		adc_value[x] = adc_value[x] / 43 ;
-		adc_value[y] = adc_value[y] / 135 ;
-		draw_Bmp32x32(adc_value[x],adc_value[y],FG_COLOR,BG_COLOR,Crosshair);
+		adc_value[x] = DrvADC_GetConversionData(x);								// Get ADC7 value
+		adc_value[y] = DrvADC_GetConversionData(y);   							// Get ADC6 value
+		adc_value[x] = adc_value[x] / 43 ;										// Convert ADC7 into X-AXIS
+		adc_value[y] = adc_value[y] / 135 ;										// Convert ADC76into X-AXIS
+		draw_Bmp32x32(adc_value[x],adc_value[y],FG_COLOR,BG_COLOR,Crosshair);	// Draw crosshair
 		
+		// By default draw each bomb, but if each bomb is defused, each show defused bmp image instead
 		if (Bomb1 == 1)	draw_Bmp16x16(Bomb1x,Bomb1y,FG_COLOR,BG_COLOR,Bomb);
 		else if (Bomb1 == 0)	draw_Bmp16x16(Bomb1x - 2, Bomb1y + 2,FG_COLOR,BG_COLOR,Defused);
-		
 		if (Bomb2 == 1)	draw_Bmp16x16(Bomb2x,Bomb2y,FG_COLOR,BG_COLOR,Bomb);
 		else if (Bomb2 == 0)	draw_Bmp16x16(Bomb2x - 2,Bomb2y + 2,FG_COLOR,BG_COLOR,Defused);		
 		
+		// If all bomb defused, break WHILE loop
 		if (Bomb1 == 0 && Bomb2 == 0) keyin = 0;
 		
-		//DrvSYS_Delay(10000);
-	  seg_display(i);			
-		i--;
-		if (i< 0) break;
+		seg_display(i);		// Show countdown timer on 7 segment (2 block)	
+		i--;				// Countdown per second
+		if (i< 0) break;	// Break WHILE Loop if countdown has finished
 		clear_LCD();
-			 
+
+		// Check for keypad input 5, if X-axis and Y-axis within vicinity of bomb AND within margin, defuse each bomb.	 
 		defuser=ScanKey();  
 		if (adc_value[x] + 10 < Bomb1x + 3 && adc_value[x] + 10 > Bomb1x - 3 && adc_value[y] + 6 < Bomb1y + 3 && adc_value[y] + 6 > Bomb1y - 3 && defuser == 5)
 		{	
@@ -652,34 +692,34 @@ while (keyin == 2)
 		}
 	}
 	
-
+// LEVEL 3 : VETERAN LOOP
 while (keyin == 3)
 	{	
 		while(gu8AdcIntFlag==0);
 		gu8AdcIntFlag=0;		     
-		adc_value[x] = DrvADC_GetConversionData(x);   
-		adc_value[y] = DrvADC_GetConversionData(y);   
-		adc_value[x] = adc_value[x] / 43 ;
-		adc_value[y] = adc_value[y] / 135 ;
-		draw_Bmp32x32(adc_value[x],adc_value[y],FG_COLOR,BG_COLOR,Crosshair);
+		adc_value[x] = DrvADC_GetConversionData(x);								// Get ADC7 value
+		adc_value[y] = DrvADC_GetConversionData(y);   							// Get ADC6 value
+		adc_value[x] = adc_value[x] / 43 ;										// Convert ADC7 into X-AXIS
+		adc_value[y] = adc_value[y] / 135 ;										// Convert ADC76into X-AXIS
+		draw_Bmp32x32(adc_value[x],adc_value[y],FG_COLOR,BG_COLOR,Crosshair);	// Draw crosshair
 		
+		// By default draw each bomb, but if each bomb is defused, each show defused bmp image instead
 		if (Bomb1 == 1)	draw_Bmp16x16(Bomb1x,Bomb1y,FG_COLOR,BG_COLOR,Bomb);
 		else if (Bomb1 == 0)	draw_Bmp16x16(Bomb1x - 2, Bomb1y + 2,FG_COLOR,BG_COLOR,Defused);
-		
 		if (Bomb2 == 1)	draw_Bmp16x16(Bomb2x,Bomb2y,FG_COLOR,BG_COLOR,Bomb);
 		else if (Bomb2 == 0)	draw_Bmp16x16(Bomb2x - 2,Bomb2y + 2,FG_COLOR,BG_COLOR,Defused);
-
 		if (Bomb3 == 1)	draw_Bmp16x16(Bomb3x,Bomb3y,FG_COLOR,BG_COLOR,Bomb);
 		else if (Bomb3 == 0)	draw_Bmp16x16(Bomb3x - 2,Bomb3y + 2,FG_COLOR,BG_COLOR,Defused);		
 		
+		// If all bomb defused, break WHILE loop
 		if (Bomb1 == 0 && Bomb2 == 0 && Bomb3 ==0 ) keyin = 0;
 		
-		//DrvSYS_Delay(10000);
-		seg_display(i);
-		i--;
-		if (i< 0) break;	
+		seg_display(i);		// Show countdown timer on 7 segment (2 block)	
+		i--;				// Countdown per second
+		if (i< 0) break;	// Break WHILE Loop if countdown has finished
 		clear_LCD();
-			 
+
+		// Check for keypad input 5, if X-axis and Y-axis within vicinity of bomb AND within margin, defuse each bomb.	 	 
 		defuser=ScanKey(); 
 		if (adc_value[x] + 10 < Bomb1x + 3 && adc_value[x] + 10 > Bomb1x - 3 && adc_value[y] + 6 < Bomb1y + 3 && adc_value[y] + 6 > Bomb1y - 3 && defuser == 5)
 		{	
@@ -694,31 +734,38 @@ while (keyin == 3)
 			Bomb3 = 0;
 		}
 	}	
-		
+
+// START END OF GAME PROCESS		
 DrvSYS_Delay(100000);
 clear_LCD();
-	if (i > 0)
+
+	// CHECK IF COUNTER i > 0, 
+	if (i > 0)			// If all bomb has been successfully diffused in time
 	{
 	draw_LCD(MissionSuccess);
 	BombDefused();
 	CelebrationLED();
 	}
-	else 	
+	else 				// If one of the bomb(s) has not been diffused in time
 	{
 	draw_Bmp64x64(32,0,FG_COLOR,BG_COLOR,MissionFailed);
 	BombDetonate();
 	DrvSYS_Delay(300000);
 	}
-	counter++;
-	PlayerOption = 1; 									//Player Done Playing First Round
+
+	counter++;			// Counter for how many times player has played the game		
+	PlayerOption = 1;	// Set condition to loop if player wants to play the game again
+
+	//DISABLE ALL TIMERS AND LED TO AVOID INTERRUPTION IN THE NEXT ROUND 									
 	DisableTIMER0();
 	DisableTIMER1();
 	DisableTIMER2();
-  DisableLED();
+  	DisableLED();
 	
+	// SHOW REPLAY MENU PAGE
 	clear_LCD();
- 	sprintf(TEXT[2],"Played : %1d Times",counter); // convert ADC value into text
-	printS_5x7(29,7, TEXT[2]);		              // output TEXT to LCD display
+ 	sprintf(TEXT[2],"Played : %1d Times",counter); 
+	printS_5x7(29,7, TEXT[2]);		              	// Show how many times player has played the game 
 	printS_5x7(38,23,"Play Again?");
 	printS_5x7(12,38,"1 to 9 : Let's Go ^_^ ");
 	printS_5x7(12,54,"5 : Give up ---> EXIT");
@@ -735,7 +782,7 @@ clear_LCD();
 			case 7: PlayerOption = 0; break;
 			case 8: PlayerOption = 0; break;
 			case 9: PlayerOption = 0; break;  
-			case 5:	
+			case 5:									// EXIT if player gives up :P
 			{
 				PlayerOption = 2;
 				clear_LCD(); 
@@ -749,3 +796,7 @@ clear_LCD();
 	}
 	}
 }
+//******************************************************************************//
+
+
+						// END OF MAIN AND END OF PROGRAMME//
