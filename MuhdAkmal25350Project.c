@@ -1,27 +1,27 @@
-//******************************************************************************//
-//	NAME 			: MUHAMMAD AKMAL BIN MOHD ADZUDDIN							//
-//	ID	 			: 25350														//
-//	PROGRAMME 		: ELECTRICAL AND ELECTRONICS ENGINEERING					//
+//******************************************************************************************************//
+//	NAME 			: MUHAMMAD AKMAL BIN MOHD ADZUDDIN					//
+//	ID	 			: 25350								//
+//	PROGRAMME 		: ELECTRICAL AND ELECTRONICS ENGINEERING				//
 //	COURSE 			: EDB 4123 REAL TIME MICROCONTROLLER SYSTEMS (RTMS)	 		//
-//	LECTURER 		:	DR PATRICK SEBASTIAN									//
-//	BATCH			: JANUARY 2021 												//	
-//																				//
-//	PROJECT TITLE : DEFUSE THE BOMB (GAME)										//
-//	FUNCTIONS UTILISED : 	1. LCD												//	
-//							2. 7 SEGMENT (BLOCK 2 AND 3)						//
-// 							3. KEYPAD											//
-//							4. 4 RED LEDs										//
-//							5. RGB LEDs											//
-//							6. BUZZER											// 
-//							7. ADC6 & ADC7 										//
-//							8. TIMER0 TIMER1 TIMER3								//
-//							9. RANDOM FUNCTION (SRAND)							//
-//																				//
-//																				//
-//	COPYRIGHTS : NONE, FEEL FREE TO USE AND ADJUST 								//
-//							 DO FOLLOW ME AT GITHUB.COM/MUHMDAKML			 	//
-//							 THANK YOU ^___^								   	//
-//******************************************************************************//
+//	LECTURER 		:	DR PATRICK SEBASTIAN						//
+//	BATCH			: JANUARY 2021 								//	
+//													//
+//	PROJECT TITLE : DEFUSE THE BOMB (GAME)								//
+//	FUNCTIONS UTILISED : 	1. LCD									//	
+//							2. 7 SEGMENT (BLOCK 2 AND 3)			//
+// 							3. KEYPAD					//
+//							4. 4 RED LEDs					//
+//							5. RGB LEDs					//
+//							6. BUZZER					// 
+//							7. ADC6 & ADC7 					//
+//							8. TIMER0 TIMER1 TIMER3				//
+//							9. RANDOM FUNCTION (SRAND)			//
+//													//
+//													//
+//	COPYRIGHTS : NONE, FEEL FREE TO USE AND ADJUST 							//
+//							 DO FOLLOW ME AT GITHUB.COM/MUHMDAKML		//
+//							 THANK YOU ^___^				//
+//******************************************************************************************************//
 
 //DEFINING ALL THE LIBRARIES USED (ONLY NORMAL LIBRARIES)
 #include <stdio.h>
@@ -46,7 +46,7 @@
 volatile uint8_t gu8AdcIntFlag;
 volatile uint32_t ledState = 0;
 
-									//PART 1
+					//PART 1
 //DEFINE ALL TIMERS AND RELATED ITEMS
 //******************************************************************************//
 // DEFINE TIMER0 IRQ HANDLE
@@ -202,7 +202,7 @@ void AdcIntCallback(uint32_t u32UserData)
 }
 //******************************************************************************//
 
-								//PART 2
+					//PART 2
 // DEFINE GPIO / LED / LCD AND OTHER FUNCTIONS
 //******************************************************************************//
 void seg_display(int16_t value)
@@ -355,7 +355,7 @@ void BombDefused(void)
 }
 //******************************************************************************//
 
-								//PART 3
+				//PART 3
 // DEFINE THE BMP IMAGE FILE 
 //******************************************************************************//
 
@@ -407,7 +407,7 @@ unsigned char MissionSuccess[1024] =
 
 
 
-							// START OF MAIN FUNCTION
+				// START OF MAIN FUNCTION
 
 
 
